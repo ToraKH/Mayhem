@@ -1,13 +1,15 @@
+from pygame import mixer
 import pygame as pg
 import config as cng
 import random
 import math
 
+
 #Made the screen a global variable -> so that its easier to recall (+ easier to blit bullets)
 screen = pg.display.set_mode((cng.SCREEN_X, cng.SCREEN_Y))
 
 class Object(pg.sprite.Sprite):
-    # Your implementation goes here
+
     def __init__(self, image):
         super().__init__()
         self.image = image
@@ -21,22 +23,18 @@ class Object(pg.sprite.Sprite):
 
 
 class Obstacle(Object):
-    def __init__(self):
-        super().__init__(Manager().obstacle_img)
+    def __init__(self, image):
+        super().__init__(image)
+        # Overwrite position to start at the random spot on the screen
+        self.position = pg.math.Vector2(random.randint(cng.BORDER, cng.SCREEN_X-cng.BORDER), random.randint(cng.BORDER, cng.SCREEN_Y//2)) 
+        self.rect = pg.rect.Rect(self.position.x, self.position.y, self.width, self.height)
 
-
-class FuelSpot(Object):     #NEEDS A SPRITE
-    def __init__(self):
-        super().__init__()
-
-
-    def refuel_ships(self):
-        """If the ships lands on the platform, they get refueled"""
-        if pg.sprite.groupcollide(Manager().player2_group, Manager().fuel_group):
-            Player2().fuel = cng.FUELLIMIT
-        if pg.sprite.groupcollide(Manager().player1_group, Manager().fuel_group):
-            Player1().fuel = cng.FUELLIMIT
-
+class FuelSpot(Object):     
+    def __init__(self, image):
+        super().__init__(image)
+        #Overwrite position to start at the bottom of the screen
+        self.position = pg.math.Vector2(cng.SCREEN_X/2, cng.SCREEN_Y-cng.BORDER*1.5)
+        self.rect = pg.rect.Rect(self.position.x, self.position.y, self.width, self.height)
 
 
 class SpaceShip(Object):
@@ -54,14 +52,14 @@ class SpaceShip(Object):
             self.velocity = direction * cng.BULLET_SPEED
 
         def update(self):
-            """updates position of the bullet"""
+            """ Updates position of the bullet"""
             self.position += self.velocity
             self.rect.center = self.position
             screen.blit(self.image, self.rect)
             self.edge_kill()
 
         def edge_kill(self):
-            """terminates the bullet if it steps out-of-bounds"""
+            """ Terminates the bullet if it steps out-of-bounds"""
             if (self.rect.right < (cng.BORDER//1.5) or self.rect.left > cng.SCREEN_X-(cng.BORDER//1.5)
                  or self.rect.bottom < (cng.BORDER//1.5) or self.rect.top > cng.SCREEN_Y-(cng.BORDER//1.5)):
                 self.kill()
@@ -81,6 +79,9 @@ class SpaceShip(Object):
         self.shoot_cooldown = cng.BULLET_COOL_DOWN
         self.bullet_count = 0
         self.last_shot_time = 0
+
+
+
 
 # =============================================================
 
@@ -115,7 +116,7 @@ class SpaceShip(Object):
 
 ## ACTION FUNCTIONS
     def edge_kill(self):
-        """New crash function to kill ship if crashes into edges"""
+        """ New crash function to kill ship if crashes into edges"""
 
         #If ship crashes into the ground
         if self.rect.bottom > (cng.SCREEN_Y - (cng.BORDER//4)):
@@ -130,11 +131,17 @@ class SpaceShip(Object):
         #If chrashed into L/R edges
         if self.rect.left < (cng.BORDER//4):
             print(self.__class__.__name__ + " crashed L")
-            self.kicng.ll()
+            self.kill()
         
         if self.rect.right > cng.SCREEN_X - (cng.BORDER//4):
             print(self.__class__.__name__ + " crashed R")
             self.kill()
+
+        #If ship chrashes into the obstacle
+        if self.rect.right > cng.SCREEN_X - (cng.BORDER//4):
+            print(self.__class__.__name__ + " crashed R")
+            self.kill()
+            
 
     def shoot(self, b_img, bullets):
         ''' The ship shoots bullets'''
@@ -152,17 +159,18 @@ class SpaceShip(Object):
 
 
     def got_shot(self, other): 
-        """Checks whether ship got hit by bullet"""
+        """ Updates score and health when ship is hit by bullet"""
         self.health += cng.HITPOINT
         other.score += cng.SCOREPOINT
 
-        if self.health <=0:
-            print("PLAYER HAS BEEN DESTROYED")
-            self.kill()
+        #DON'T THINK WE NEED THIS ANYMORE, BECAUSE IT IS IN UPDATE() INSTEAD
+        #if self.health <=0:
+           # print("PLAYER HAS BEEN DESTROYED")
+            #self.kill()
 
 
     def draw(self):
-        """ overwrites pygames draw function to rotate the image of the sprite"""
+        """ Overwrites pygames draw function to rotate the image of the sprite"""
         rotated_image = pg.transform.rotate(self.image, self.angle-90)          #Rotate image by calculated angle 
         rotated_rect = rotated_image.get_rect(center=self.rect.center)  #Rotate sprite's rectangle by same angle
         #pg.draw.rect(screen, (255, 0, 0), self.rect, 2)
@@ -173,57 +181,7 @@ class SpaceShip(Object):
 # ============================================================= 
 # =============================================================     
     
-## FUNCTIONS NOT USED
-    def fuel_use(self):
-        """Decreases the amount of fuel as the time goes"""
-        self.fuel -= cng.FUELUSE
-        return self.fuel
-    
 
-    def crash(self):
-        """Checks whether ship has crashed into obstacles"""
-        pass
-
-    def update_score(self, scorepoints):
-        """Updates the score"""
-        # #hvis crasher, så går score ned [ie -10]
-        # #hvis man treffer motstander går score opp [ie +10]
-        # #hvis motstander dør av skuddet, går score masse opp [ie +50?]
-        # self.score += scorepoints
-        # return self.score
-        pass
-
-
-    def update_health(self, healthpoints):
-        """Updates health"""
-        # self.health += healthpoints
-        # if self.health < 0:
-        #     self.kill()
-        # #hvis man crasher går health ned
-        # #hvis man blir skutt går health ned
-        # #hvis man har null health så dør man
-        # return self.health
-        pass
-
-
-    def update_health_and_score(self):
-        # #If crashed in walls or obstacles, then kill
-        # if self.crash:
-        #     self.kill()
-        
-        # # If they crash in each other, they loose points and health
-        # if self.crash_eachother():
-        #     self.update_health(random.randint(1, 8)*cng.HITPOINT)
-        #     self.update_score(-3*cng.SCOREPOINT)
-
-        # if self.got_shot(self):
-        #     self.update_health(2.5*cng.HITPOINT)
-        #     self.update_score(-4*cng.SCOREPOINT)
-        pass
-
-       
-        
-# ============================================================= 
     
 
 #RED SPACESHIP    
@@ -236,18 +194,23 @@ class Player1(SpaceShip):
         
 
     def update(self, b_img, p1_bullets):
+        """Update the state of player 1"""
         self.velocity = pg.math.Vector2(0,0) #Reset velocity
         key = pg.key.get_pressed()
         if key[pg.K_a]:
             self.rotate_left()
         if key[pg.K_d]:
             self.rotate_right()
-        if key[pg.K_w]:
+        if key[pg.K_w] and self.fuel >= 0:
             self.thrust()
+            self.fuel -= cng.FUELUSE #Uses fuel when thrusts
         else:
             self.gravity()
         if key[pg.K_LSHIFT]:
             self.shoot(b_img, p1_bullets)
+        if self.health <= 0:
+            self.kill()
+            print("PLAYER's LAST COSMIC DANCE")
 
         self.position += self.velocity
         self.rect.topleft = self.position   #Update sprite position
@@ -264,19 +227,23 @@ class Player2(SpaceShip):
         self.position = pg.math.Vector2(random.randint(cng.SCREEN_X//2, cng.SCREEN_X-cng.BORDER), cng.SCREEN_Y-(cng.BORDER*2.2))
 
     def update(self, b_img, p2_bullets):
+        """Update the state of player 2"""
         self.velocity = pg.math.Vector2(0,0)
         key = pg.key.get_pressed()
         if key[pg.K_LEFT]:
             self.rotate_left()
         if key[pg.K_RIGHT]:
             self.rotate_right()
-        if key[pg.K_UP]:
+        if key[pg.K_UP] and self.fuel >= 0:
             self.thrust()
+            self.fuel -= cng.FUELUSE #Uses fuel when thrusts
         else: 
             self.gravity()
         if key[pg.K_RSHIFT]:
             self.shoot(b_img, p2_bullets)
-
+        if self.health <= 0:
+            self.kill()
+            print("PLAYER BLASTED INTO STARDUST")
 
         self.position += self.velocity
         self.rect.topleft = self.position
@@ -292,24 +259,52 @@ class Manager():
         self.clock = pg.time.Clock()
 
         # Load the simulation background and use it
-        self.background = pg.image.load(cng.BACKGROUND) 
+        self.background = pg.image.load(cng.BACKGROUND_IMAGE) 
         self.background = pg.transform.scale(self.background,(cng.SCREEN_X, cng.SCREEN_Y)) 
         self.background.convert()
 
         # Load images
-        self.player1_img = pg.image.load(cng.SHIP_PLAYER1).convert_alpha() 
+        self.player1_img = pg.image.load(cng.SHIP_PLAYER1_IMAGE).convert_alpha() 
         self.player1_img = pg.transform.scale(self.player1_img,(self.player1_img.get_width(), self.player1_img.get_height()))
         
-        self.player2_img = pg.image.load(cng.SHIP_PLAYER2).convert_alpha() 
+        self.player2_img = pg.image.load(cng.SHIP_PLAYER2_IMAGE).convert_alpha() 
         self.player2_img = pg.transform.scale(self.player2_img,(self.player2_img.get_width(), self.player2_img.get_height()))
         
-        self.obstacle_img = pg.image.load(cng.OBSTACLE).convert_alpha() 
+        self.obstacle_img = pg.image.load(cng.OBSTACLE_IMAGE).convert_alpha() 
         self.obstacle_img = pg.transform.scale(self.obstacle_img,(self.obstacle_img.get_width(), self.obstacle_img.get_height()))
         
-        self.bullet_img = pg.image.load(cng.BULLET).convert_alpha() 
+        self.bullet_img = pg.image.load(cng.BULLET_IMAGE).convert_alpha() 
         self.bullet_img = pg.transform.scale(self.bullet_img,(self.bullet_img.get_width()/15, self.bullet_img.get_height()/15))
         
+        self.fuel_img = pg.image.load(cng.FUEL_IMAGE).convert_alpha() 
+        self.fuel_img = pg.transform.scale(self.fuel_img,(self.fuel_img.get_width(), self.fuel_img.get_height()))
         
+        # Timers
+        self.current_image_index1 = -1
+        self.timer1 = 0
+        self.interval1 = cng.INTERVAL
+        self.finished_poofing1 = False
+
+        self.current_image_index2 = -1
+        self.timer2 = 0
+        self.interval2 = cng.INTERVAL
+        self.finished_poofing2 = False
+
+
+        # Scales and converts poof images, and adds them to the poof_images list
+        self.poof_images = []
+        self.poof_filenames = [cng.I0, cng.I1, cng.I2, cng.I3, cng.I4, cng.I5, cng.I6, cng.I7
+        , cng.I8, cng.I9, cng.I10, cng.I11, cng.I12, cng.I13, cng.I14, cng.I15, cng.I16, cng.I17
+        , cng.I18, cng.I19, cng.I20, cng.I21, cng.I22, cng.I23, cng.I24, cng.I25, cng.I26, cng.I27
+        , cng.I28, cng.I29]
+
+        for filename in self.poof_filenames:
+            image = pg.image.load(filename).convert_alpha()
+            image = pg.transform.scale(image,(image.get_width(), image.get_height()))
+            self.poof_images.append(image)
+
+
+        self.play_music() 
         self.sprites_init()
         self.loop()
 
@@ -322,6 +317,28 @@ class Manager():
                 if event.type == pg.QUIT:
                     exit()
 
+
+
+
+            if len(self.player1_group) == 0 and self.finished_poofing1 == False:
+                # Update timer
+                self.timer1 += self.clock.get_time()
+                if self.current_image_index1 < len(self.poof_images) -1:     # Make sure not to exceed maximum index
+                    if self.timer1 >= self.interval1:
+                        self.current_image_index1 += 1
+                        self.timer1 = 0  # Resets timer for next image
+                if self.current_image_index1 == len(self.poof_images) -1:
+                    self.finished_poofing1 = True
+
+            if len(self.player2_group) == 0 and self.finished_poofing2 == False:
+                # Update timer
+                self.timer2 += self.clock.get_time()
+                if self.current_image_index2 < len(self.poof_images) -1:     # Make sure not to exceed maximum index
+                    if self.timer2 >= self.interval2:
+                        self.current_image_index2 += 1
+                        self.timer2 = 0  # Resets timer for next image
+                if self.current_image_index2 == len(self.poof_images) -1:
+                    self.finished_poofing2 = True
             self.update()
 
             self.clock.tick(60)  # Frames per second
@@ -340,13 +357,13 @@ class Manager():
         self.p1_bullet_group = pg.sprite.Group()
         self.p2_bullet_group = pg.sprite.Group()
 
-
-        """
-        self.obstacle = Obstacle()
         self.obstacle_group = pg.sprite.Group()
-        self.obstacle_group.add(self.obstacle)
+        self.obstacle_group.add(Obstacle(self.obstacle_img))
 
-        """
+        self.fuel_group = pg.sprite.Group()
+        self.fuel_group.add(FuelSpot(self.fuel_img))
+
+        
 
 
     def update(self):
@@ -358,6 +375,7 @@ class Manager():
 
         for player in self.player2_group:
             player.draw()
+
 
 
         #Update Group
@@ -372,12 +390,29 @@ class Manager():
             for bullet in self.p2_bullet_group:
                 bullet.update()
 
-        #self.obstacle_group.draw(screen)
-        #self.obstacle_group.update()
+        self.obstacle_group.draw(screen)
+        self.obstacle_group.update()
 
+        self.fuel_group.draw(screen)
+        self.fuel_group.update()
 
+        # Draws current poof image
+        if len(self.player1_group) == 0:
+            self.curr_poof_img1 = self.poof_images[self.current_image_index1]
+            poof_x1 = self.player1.rect.x-(self.curr_poof_img1.get_width()*0.35)
+            poof_y1 = self.player1.rect.y-(self.curr_poof_img1.get_height()*0.35)
+            screen.blit(self.curr_poof_img1, (poof_x1, poof_y1))
+        
+        if len(self.player2_group) == 0:
+            self.curr_poof_img2 = self.poof_images[self.current_image_index2]
+            poof_x2 = self.player2.rect.x-(self.curr_poof_img2.get_width()*0.35)
+            poof_y2 = self.player2.rect.y-(self.curr_poof_img2.get_height()*0.35)
+            screen.blit(self.poof_images[self.current_image_index2], (poof_x2, poof_y2))
+            
         # Check for Collisions
-        if pg.sprite.groupcollide(self.player1_group, self.player2_group, True, True):
+        if pg.sprite.groupcollide(self.player1_group, self.player2_group, False, False):
+            self.player1.health += cng.HITPOINT
+            self.player2.health += cng.HITPOINT
             print("CRASH COURSE DELIGHT")
         
         if pg.sprite.groupcollide(self.player1_group, self.p2_bullet_group, False, True):
@@ -394,28 +429,65 @@ class Manager():
             print("Player1 SCORE:", self.player1.score, "\t Player2 SCORE:", self.player2.score)
 
 
+        if pg.sprite.groupcollide(self.obstacle_group, self.player1_group, False, True):
+            print("ALIEN DINNER: SHIP's ON THE MENU!")
+        if pg.sprite.groupcollide(self.obstacle_group, self.player2_group, False, True):
+            print("ALIEN PLAYGROUND: SHIP MEETS DOOM!")
+        
+        #If the ships lands on the platform, they get refueled
+        if pg.sprite.groupcollide(self.player1_group, self.fuel_group, False, False):
+            self.player1.fuel = cng.FUELLIMIT
+            print("SHIPS REFUELED, READY FOR LIFTOFF!")
+        if pg.sprite.groupcollide(self.player2_group, self.fuel_group, False, False):
+            self.player2.fuel = cng.FUELLIMIT
+            print("FUELLED UP, SKYWARD BOUND!")
+
+
+        self.text()
         pg.display.flip()
 
 
 
-    '''def text(self):
+    def text(self):
         """Prints text on screen"""
         font = pg.font.SysFont('arial', 20)
+
         player1_txt = font.render('PLAYER 1', True, (255, 255, 255))
-        score_player1 = font.render('SCORE: ' + str(self.player1.score), True, (255, 255, 255))
-        fuel_player1 = font.render('FUEL: ' + str(self.player1.fuel), True, (255, 255, 255))
+        current_score_1 = str(self.player1.score)
+        score_player1 = font.render('SCORE: ' + str(current_score_1), True, (255, 255, 255))
+        current_fuel_1 = str(self.player1.fuel)
+        fuel_player1 = font.render('FUEL: ' + str(current_fuel_1), True, (255, 255, 255))
+        current_health_1 = str(self.player1.health)
+        health_player1 = font.render('HEALTH: '+ str(current_health_1), True, (255, 255, 255))
 
         player2_txt = font.render('PLAYER 2', True, (255, 255, 255))
-        score_player2 = font.render('SCORE: ' + str(self.player2.score), True, (255, 255, 255))
-        fuel_player2 = font.render('FUEL: ' + str(self.player2.fuel), True, (255, 255, 255))
+        current_score_2 = str(self.player2.score)
+        score_player2 = font.render('SCORE: ' + str(current_score_2), True, (255, 255, 255))
+        current_fuel_2 = str(self.player2.fuel)
+        fuel_player2 = font.render('FUEL: ' + str(current_fuel_2), True, (255, 255, 255))
+        current_health_2 = str(self.player2.health)
+        health_player2 = font.render('HEALTH: '+ str(current_health_2), True, (255, 255, 255))
 
-        self.screen.blit(player1_txt, (cng.SCREEN_X - player1_txt.get_width(), cng.SCREEN_Y - 2*player1_txt.get_height()))
-        self.screen.blit(score_player1, (cng.SCREEN_X - score_player1.get_width(), cng.SCREEN_Y - 3*score_player1.get_height()))
-        self.screen.blit(fuel_player1, (cng.SCREEN_X - fuel_player1.get_width(), cng.SCREEN_Y - 4*fuel_player1.get_height()))
-        self.screen.blit(player2_txt, (cng.SCREEN_X - player2_txt.get_width(), cng.SCREEN_Y - 5*player2_txt.get_height()))
-        self.screen.blit(score_player2, (cng.SCREEN_X - score_player2.get_width(), cng.SCREEN_Y - 6*score_player2.get_height()))
-        self.screen.blit(fuel_player2, (cng.SCREEN_X - fuel_player2.get_width(), cng.SCREEN_Y - 7*fuel_player2.get_height()))
-    '''
+        screen.blit(player1_txt, (15, cng.SCREEN_Y - 5*player1_txt.get_height()))
+        screen.blit(score_player1, (15, cng.SCREEN_Y - 2*score_player1.get_height()))
+        screen.blit(fuel_player1, (15, cng.SCREEN_Y - 3*fuel_player1.get_height()))
+        screen.blit(health_player1, (15, cng.SCREEN_Y - 4*health_player1.get_height()))
+                    
+        screen.blit(player2_txt, (cng.SCREEN_X - player2_txt.get_width()-15, cng.SCREEN_Y - 5*player2_txt.get_height()))
+        screen.blit(score_player2, (cng.SCREEN_X - score_player2.get_width()-15, cng.SCREEN_Y - 2*score_player2.get_height()))
+        screen.blit(fuel_player2, (cng.SCREEN_X - fuel_player2.get_width()-15, cng.SCREEN_Y - 3*fuel_player2.get_height()))
+        screen.blit(health_player2, (cng.SCREEN_X - health_player2.get_width()-15, cng.SCREEN_Y - 4*health_player2.get_height()))
+
+     
+    
+    def play_music(self):
+        """Plays the music"""
+        mixer.init()
+        mixer.music.load((cng.MUSIC))
+        mixer.music.set_volume(cng.VOLUME)
+        mixer.music.play(0, 0, 0)
+        pg.mixer.music.rewind() # Loops the music
+
 
 if __name__ == "__main__":
     Manager()

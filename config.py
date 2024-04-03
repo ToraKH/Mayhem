@@ -28,9 +28,10 @@ BULLET_MAX = 3              #How many bullet per bullet-set
 # Gas controls  
 FUELLIMIT = 1000    # Size of fuel tank
 FUELUSE = 1         # Amount of fuel used
+REFUEL_RATE = 100   # Amount of fuel the ship gets when refueling
 
 # Game controls
-HEALTH = 500          #Max health
+HEALTH = 500          #Health at the beginning
 HITPOINT = -10
 SCOREPOINT = 10
 
@@ -73,4 +74,5 @@ I26 = "poof_images/tile026.png"
 I27 = "poof_images/tile027.png"
 I28 = "poof_images/tile028.png"
 I29 = "poof_images/tile029.png"
-INTERVAL = 70     #2 seconds between shifting poof images
+
+INTERVAL = 70     #0.07 seconds between shifting poof images

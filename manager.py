@@ -116,7 +116,7 @@ class SpaceShip(Object):
 
 ## ACTION FUNCTIONS
     def edge_kill(self):
-        """ New crash function to kill ship if crashes into edges"""
+        """ Kill ship if crashes into edges"""
 
         #If ship crashes into the ground
         if self.rect.bottom > (cng.SCREEN_Y - (cng.BORDER//4)):
@@ -163,17 +163,12 @@ class SpaceShip(Object):
         self.health += cng.HITPOINT
         other.score += cng.SCOREPOINT
 
-        #DON'T THINK WE NEED THIS ANYMORE, BECAUSE IT IS IN UPDATE() INSTEAD
-        #if self.health <=0:
-           # print("PLAYER HAS BEEN DESTROYED")
-            #self.kill()
 
 
     def draw(self):
         """ Overwrites pygames draw function to rotate the image of the sprite"""
         rotated_image = pg.transform.rotate(self.image, self.angle-90)          #Rotate image by calculated angle 
-        rotated_rect = rotated_image.get_rect(center=self.rect.center)  #Rotate sprite's rectangle by same angle
-        #pg.draw.rect(screen, (255, 0, 0), self.rect, 2)
+        rotated_rect = rotated_image.get_rect(center=self.rect.center)          #Rotate sprite's rectangle by same angle
         
         screen.blit(rotated_image, rotated_rect)
 
@@ -205,12 +200,12 @@ class Player1(SpaceShip):
             self.thrust()
             self.fuel -= cng.FUELUSE #Uses fuel when thrusts
         else:
-            self.gravity()
+            self.gravity()         
         if key[pg.K_LSHIFT]:
             self.shoot(b_img, p1_bullets)
         if self.health <= 0:
             self.kill()
-            print("PLAYER's LAST COSMIC DANCE")
+            print("PLAYER1's LAST COSMIC DANCE")
 
         self.position += self.velocity
         self.rect.topleft = self.position   #Update sprite position
@@ -243,7 +238,7 @@ class Player2(SpaceShip):
             self.shoot(b_img, p2_bullets)
         if self.health <= 0:
             self.kill()
-            print("PLAYER BLASTED INTO STARDUST")
+            print("PLAYER2 BLASTED INTO STARDUST")
 
         self.position += self.velocity
         self.rect.topleft = self.position
@@ -279,15 +274,15 @@ class Manager():
         self.fuel_img = pg.image.load(cng.FUEL_IMAGE).convert_alpha() 
         self.fuel_img = pg.transform.scale(self.fuel_img,(self.fuel_img.get_width(), self.fuel_img.get_height()))
         
-        # Timers
+        # Timers for poof images
         self.current_image_index1 = -1
         self.timer1 = 0
-        self.interval1 = cng.INTERVAL
+        self.interval1 = cng.INTERVAL       # Number of milliseconds before shifting poof image
         self.finished_poofing1 = False
 
         self.current_image_index2 = -1
         self.timer2 = 0
-        self.interval2 = cng.INTERVAL
+        self.interval2 = cng.INTERVAL       # Number of milliseconds before shifting poof image
         self.finished_poofing2 = False
 
 
@@ -318,26 +313,23 @@ class Manager():
                     exit()
 
 
-
-
+            # If a player is dead, start poof animation
             if len(self.player1_group) == 0 and self.finished_poofing1 == False:
-                # Update timer
-                self.timer1 += self.clock.get_time()
-                if self.current_image_index1 < len(self.poof_images) -1:     # Make sure not to exceed maximum index
-                    if self.timer1 >= self.interval1:
+                self.timer1 += self.clock.get_time()    # Update timer
+                if self.current_image_index1 < len(self.poof_images) -1:    # Make sure not to exceed maximum index
+                    if self.timer1 >= self.interval1:   # Checks if it is time to change poof image                    
                         self.current_image_index1 += 1
-                        self.timer1 = 0  # Resets timer for next image
-                if self.current_image_index1 == len(self.poof_images) -1:
+                        self.timer1 = 0                 # Resets timer for next image
+                if self.current_image_index1 == len(self.poof_images) -1:   # End animating if at the last image
                     self.finished_poofing1 = True
 
             if len(self.player2_group) == 0 and self.finished_poofing2 == False:
-                # Update timer
-                self.timer2 += self.clock.get_time()
+                self.timer2 += self.clock.get_time()    # Update timer
                 if self.current_image_index2 < len(self.poof_images) -1:     # Make sure not to exceed maximum index
-                    if self.timer2 >= self.interval2:
+                    if self.timer2 >= self.interval2:   # Checks if it is time to change poof image
                         self.current_image_index2 += 1
-                        self.timer2 = 0  # Resets timer for next image
-                if self.current_image_index2 == len(self.poof_images) -1:
+                        self.timer2 = 0                 # Resets timer for next image
+                if self.current_image_index2 == len(self.poof_images) -1:   # End animating if at the last image
                     self.finished_poofing2 = True
             self.update()
 
@@ -430,17 +422,19 @@ class Manager():
 
 
         if pg.sprite.groupcollide(self.obstacle_group, self.player1_group, False, True):
-            print("ALIEN DINNER: SHIP's ON THE MENU!")
+            print("ALIEN DINNER: PLAYER1's ON THE MENU!")
         if pg.sprite.groupcollide(self.obstacle_group, self.player2_group, False, True):
-            print("ALIEN PLAYGROUND: SHIP MEETS DOOM!")
+            print("ALIEN PLAYGROUND: PLAYER2 MEETS DOOM!")
         
-        #If the ships lands on the platform, they get refueled
+        #If the ships touch the fuel can, they get refueled
         if pg.sprite.groupcollide(self.player1_group, self.fuel_group, False, False):
-            self.player1.fuel = cng.FUELLIMIT
-            print("SHIPS REFUELED, READY FOR LIFTOFF!")
+            if self.player1.fuel < cng.FUELLIMIT:
+                self.player1.fuel += cng.FUELUSE
+            print("PLAYER1 REFUELED, READY FOR LIFTOFF!")
         if pg.sprite.groupcollide(self.player2_group, self.fuel_group, False, False):
-            self.player2.fuel = cng.FUELLIMIT
-            print("FUELLED UP, SKYWARD BOUND!")
+            if self.player2.fuel < cng.FUELLIMIT:
+                self.player2.fuel += cng.FUELUSE
+            print("PLAYER2 FUELLED UP, SKYWARD BOUND!")
 
 
         self.text()
@@ -452,20 +446,23 @@ class Manager():
         """Prints text on screen"""
         font = pg.font.SysFont('arial', 20)
 
-        player1_txt = font.render('PLAYER 1', True, (255, 255, 255))
+        # Gets the current status
         current_score_1 = str(self.player1.score)
-        score_player1 = font.render('SCORE: ' + str(current_score_1), True, (255, 255, 255))
         current_fuel_1 = str(self.player1.fuel)
-        fuel_player1 = font.render('FUEL: ' + str(current_fuel_1), True, (255, 255, 255))
         current_health_1 = str(self.player1.health)
+
+        current_score_2 = str(self.player2.score)
+        current_fuel_2 = str(self.player2.fuel)
+        current_health_2 = str(self.player2.health)
+
+        player1_txt = font.render('PLAYER 1', True, (255, 255, 255))    
+        score_player1 = font.render('SCORE: ' + str(current_score_1), True, (255, 255, 255))
+        fuel_player1 = font.render('FUEL: ' + str(current_fuel_1), True, (255, 255, 255))
         health_player1 = font.render('HEALTH: '+ str(current_health_1), True, (255, 255, 255))
 
         player2_txt = font.render('PLAYER 2', True, (255, 255, 255))
-        current_score_2 = str(self.player2.score)
         score_player2 = font.render('SCORE: ' + str(current_score_2), True, (255, 255, 255))
-        current_fuel_2 = str(self.player2.fuel)
         fuel_player2 = font.render('FUEL: ' + str(current_fuel_2), True, (255, 255, 255))
-        current_health_2 = str(self.player2.health)
         health_player2 = font.render('HEALTH: '+ str(current_health_2), True, (255, 255, 255))
 
         screen.blit(player1_txt, (15, cng.SCREEN_Y - 5*player1_txt.get_height()))

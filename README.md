@@ -20,21 +20,23 @@ Dulmini S. Gamage
 - spaceships no longer directly die upon collision with each other (they take some damage instead)
 - added text
 - added poofs when spaceship dies
+- spaceships have to wait longer to get refueled
 
 ## Newest stuff completed
-- spaceships have to wait longer to get refueled
+- added starting screen and end screen
 
 ## Remaining tasks
 - need to choose which music to use
     - there are already two to choose from, but there are A LOT MORE HERE https://pixabay.com/music/search/space/
     - preferably a long song, as it just loops
-
+- need to choose a start and end background
+    - aldready two each (matching name) to choose from, but can make others too
 
 
 ## Optional
 - add poofs when spaceships crashes (just a few poofs)
 - add poof sound when spaceships poof
-- add a starting screen and end screen
+
 
     
 
@@ -66,5 +68,5 @@ To answer your questions:
 
 **`RIGHT / D`** -> Right steer
 
-**`LEFT SHIFT / RIGHT SHIFT`** -> Bullet
+**`LEFT SHIFT / RIGHT CTRL`** -> Bullet
     <mark>**MIGHT HAVE TO CHANGE IF MICROSOFT'S STICKY KEYS FEATURE GETS IN THE WAY TOO MUCH...**</mark>

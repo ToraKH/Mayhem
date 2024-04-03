@@ -10,6 +10,14 @@ BORDER = 50
 SHIP_PLAYER1_IMAGE = "spaceship_small_red.png" # Got this from  https://opengameart.org/content/pixel-spaceship
 SHIP_PLAYER2_IMAGE = "spaceship_small_blue.png"   # Got this from  https://opengameart.org/content/pixel-spaceship 
 BACKGROUND_IMAGE = "cave.png"
+
+#START_BACKGROUND = "cosmic_cavern.png"
+#END_BACKGROUND = "cosm_cav_restart.png"
+
+START_BACKGROUND = "cavernous_chaos.png"  #M^ VELGE EN STARTBAKGRUNN
+END_BACKGROUND = "cav_chaos_restart.png"
+
+
 OBSTACLE_IMAGE = "alien.png"  # Got this from https://www.vecteezy.com/png/19017599-an-8-bit-retro-styled-pixel-art-illustration-of-a-goblin 
 BULLET_IMAGE = "bullet.png"
 FUEL_IMAGE = "fuel_can.png"

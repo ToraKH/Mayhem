@@ -121,25 +121,30 @@ class SpaceShip(Object):
         #If ship crashes into the ground
         if self.rect.bottom > (cng.SCREEN_Y - (cng.BORDER//4)):
             print(self.__class__.__name__ + " is tasting the dirt")
+            self.health = 0
             self.kill()
 
         #If ship crashes into the sky
         if self.rect.top < (cng.BORDER//4):
             print(self.__class__.__name__ + " is meeting the Lord")
+            self.health = 0
             self.kill()
 
         #If chrashed into L/R edges
         if self.rect.left < (cng.BORDER//4):
             print(self.__class__.__name__ + " crashed L")
+            self.health = 0
             self.kill()
         
         if self.rect.right > cng.SCREEN_X - (cng.BORDER//4):
             print(self.__class__.__name__ + " crashed R")
+            self.health = 0
             self.kill()
 
         #If ship chrashes into the obstacle
         if self.rect.right > cng.SCREEN_X - (cng.BORDER//4):
             print(self.__class__.__name__ + " crashed R")
+            self.health = 0
             self.kill()
             
 
@@ -234,7 +239,7 @@ class Player2(SpaceShip):
             self.fuel -= cng.FUELUSE #Uses fuel when thrusts
         else: 
             self.gravity()
-        if key[pg.K_RSHIFT]:
+        if key[pg.K_RCTRL]:
             self.shoot(b_img, p2_bullets)
         if self.health <= 0:
             self.kill()
@@ -258,6 +263,14 @@ class Manager():
         self.background = pg.transform.scale(self.background,(cng.SCREEN_X, cng.SCREEN_Y)) 
         self.background.convert()
 
+        self.start_background = pg.image.load(cng.START_BACKGROUND) 
+        self.start_background = pg.transform.scale(self.start_background,(cng.SCREEN_X, cng.SCREEN_Y)) 
+        self.start_background.convert()
+
+        self.end_background = pg.image.load(cng.END_BACKGROUND) 
+        self.end_background = pg.transform.scale(self.end_background,(cng.SCREEN_X, cng.SCREEN_Y)) 
+        self.end_background.convert()
+
         # Load images
         self.player1_img = pg.image.load(cng.SHIP_PLAYER1_IMAGE).convert_alpha() 
         self.player1_img = pg.transform.scale(self.player1_img,(self.player1_img.get_width(), self.player1_img.get_height()))
@@ -274,16 +287,8 @@ class Manager():
         self.fuel_img = pg.image.load(cng.FUEL_IMAGE).convert_alpha() 
         self.fuel_img = pg.transform.scale(self.fuel_img,(self.fuel_img.get_width(), self.fuel_img.get_height()))
         
-        # Timers for poof images
-        self.current_image_index1 = -1
-        self.timer1 = 0
-        self.interval1 = cng.INTERVAL       # Number of milliseconds before shifting poof image
-        self.finished_poofing1 = False
+        self.game = "starting"     # Game starts on start screen
 
-        self.current_image_index2 = -1
-        self.timer2 = 0
-        self.interval2 = cng.INTERVAL       # Number of milliseconds before shifting poof image
-        self.finished_poofing2 = False
 
 
         # Scales and converts poof images, and adds them to the poof_images list
@@ -301,8 +306,20 @@ class Manager():
 
         self.play_music() 
         self.sprites_init()
+        self.poofs_init()
         self.loop()
 
+    def poofs_init(self):
+        """Initialize the timers and flags for poof images"""
+        self.current_image_index1 = -1
+        self.timer1 = 0
+        self.interval1 = cng.INTERVAL       # Number of milliseconds before shifting poof image
+        self.finished_poofing1 = False
+
+        self.current_image_index2 = -1
+        self.timer2 = 0
+        self.interval2 = cng.INTERVAL       # Number of milliseconds before shifting poof image
+        self.finished_poofing2 = False
 
     def loop(self):
         """Main loop for manager. Checks the event for exit strategy, and
@@ -312,28 +329,63 @@ class Manager():
                 if event.type == pg.QUIT:
                     exit()
 
+            
+            # Startscreen
+            if self.game == "starting":
+                screen.blit(self.start_background, (0,0))
+                pg.display.update() 
 
-            # If a player is dead, start poof animation
-            if len(self.player1_group) == 0 and self.finished_poofing1 == False:
-                self.timer1 += self.clock.get_time()    # Update timer
-                if self.current_image_index1 < len(self.poof_images) -1:    # Make sure not to exceed maximum index
-                    if self.timer1 >= self.interval1:   # Checks if it is time to change poof image                    
-                        self.current_image_index1 += 1
-                        self.timer1 = 0                 # Resets timer for next image
-                if self.current_image_index1 == len(self.poof_images) -1:   # End animating if at the last image
-                    self.finished_poofing1 = True
+                # Start simulation when space button is pressed
+                key = pg.key.get_pressed()
+                if key[pg.K_SPACE]:
+                    pg.time.delay(500) #Delay game screen to make transition smooth
+                    self.game = "on"
+            
+            # The game starts
+            if self.game == "on":
 
-            if len(self.player2_group) == 0 and self.finished_poofing2 == False:
-                self.timer2 += self.clock.get_time()    # Update timer
-                if self.current_image_index2 < len(self.poof_images) -1:     # Make sure not to exceed maximum index
-                    if self.timer2 >= self.interval2:   # Checks if it is time to change poof image
-                        self.current_image_index2 += 1
-                        self.timer2 = 0                 # Resets timer for next image
-                if self.current_image_index2 == len(self.poof_images) -1:   # End animating if at the last image
-                    self.finished_poofing2 = True
-            self.update()
+                # If a player is dead, start poof animation
+                if len(self.player1_group) == 0 and self.finished_poofing1 == False:
+                    self.timer1 += self.clock.get_time()    # Update timer
+                    if self.current_image_index1 < len(self.poof_images) -1:    # Make sure not to exceed maximum index
+                        if self.timer1 >= self.interval1:   # Checks if it is time to change poof image                    
+                            self.current_image_index1 += 1
+                            self.timer1 = 0                 # Resets timer for next image
+                    if self.current_image_index1 == len(self.poof_images) -1:   # End animating if at the last image
+                        self.finished_poofing1 = True
 
-            self.clock.tick(60)  # Frames per second
+                if len(self.player2_group) == 0 and self.finished_poofing2 == False:
+                    self.timer2 += self.clock.get_time()    # Update timer
+                    if self.current_image_index2 < len(self.poof_images) -1:     # Make sure not to exceed maximum index
+                        if self.timer2 >= self.interval2:   # Checks if it is time to change poof image
+                            self.current_image_index2 += 1
+                            self.timer2 = 0                 # Resets timer for next image
+                    if self.current_image_index2 == len(self.poof_images) -1:   # End animating if at the last image
+                        self.finished_poofing2 = True
+
+
+                # Start end screen when one of the players are dead, and poof animation is done
+                if len(self.player1_group) == 0 or len(self.player2_group) == 0: 
+                    if self.finished_poofing1 or self.finished_poofing2:
+                        pg.time.delay(300) # Delay end screen to make transition smooth
+                        self.game = "ending"
+                self.update()
+                self.clock.tick(60)  # Frames per second
+
+            
+            if self.game == "ending":
+                self.end_screen()
+
+                # Restart game
+                key = pg.key.get_pressed()
+                if key[pg.K_SPACE]:
+                    pg.time.delay(800) #Delay start to make transition smooth
+
+                    # Need to reset the sprites so a new, fresh game can start
+                    self.sprites_init()
+                    self.poofs_init()
+                    self.game = "on"
+
 
 
     def sprites_init(self):
@@ -442,28 +494,45 @@ class Manager():
 
 
 
+    def end_screen(self):
+        # Create the background and create the fonts
+        screen.blit(self.end_background, (0,0))  
+        font1 = pg.font.SysFont('arial', 50)
+        
+
+        # Create the text in the correct font
+        playerONE = font1.render('PLAYER 1', True, (255, 255, 255))
+        scoreONE = font1.render('SCORE: ' +str(self.player1.score), True, (100, 100, 100))
+        healthONE = font1.render('HEALTH: '+ str(self.player1.health), True, (100, 100, 100))
+
+        playerTWO = font1.render('PLAYER 2', True, (255, 255, 255))
+        scoreTWO = font1.render('SCORE: ' + str(self.player2.score), True, (100, 100, 100))
+        healthTWO = font1.render('HEALTH: '+ str(self.player2.health), True, (100, 100, 100))
+
+        # Print the text
+        screen.blit(playerONE, (45, cng.SCREEN_Y/3 + playerONE.get_height()))
+        screen.blit(scoreONE, (45, cng.SCREEN_Y/3 + 2*scoreONE.get_height()))
+        screen.blit(healthONE, (45, cng.SCREEN_Y/3 + 3*healthONE.get_height()))
+
+        screen.blit(playerTWO, (cng.SCREEN_X-playerTWO.get_width()-45, cng.SCREEN_Y/3 + playerTWO.get_height()))
+        screen.blit(scoreTWO, (cng.SCREEN_X-scoreTWO.get_width()-45, cng.SCREEN_Y/3 + 2*scoreTWO.get_height()))
+        screen.blit(healthTWO, (cng.SCREEN_X-healthTWO.get_width()-45, cng.SCREEN_Y/3 + 3*healthTWO.get_height()))
+        pg.display.update()        
+
+
     def text(self):
         """Prints text on screen"""
         font = pg.font.SysFont('arial', 20)
 
-        # Gets the current status
-        current_score_1 = str(self.player1.score)
-        current_fuel_1 = str(self.player1.fuel)
-        current_health_1 = str(self.player1.health)
-
-        current_score_2 = str(self.player2.score)
-        current_fuel_2 = str(self.player2.fuel)
-        current_health_2 = str(self.player2.health)
-
         player1_txt = font.render('PLAYER 1', True, (255, 255, 255))    
-        score_player1 = font.render('SCORE: ' + str(current_score_1), True, (255, 255, 255))
-        fuel_player1 = font.render('FUEL: ' + str(current_fuel_1), True, (255, 255, 255))
-        health_player1 = font.render('HEALTH: '+ str(current_health_1), True, (255, 255, 255))
+        score_player1 = font.render('SCORE: ' + str(self.player1.score), True, (255, 255, 255))
+        fuel_player1 = font.render('FUEL: ' + str(self.player1.fuel), True, (255, 255, 255))
+        health_player1 = font.render('HEALTH: '+ str(self.player1.health), True, (255, 255, 255))
 
         player2_txt = font.render('PLAYER 2', True, (255, 255, 255))
-        score_player2 = font.render('SCORE: ' + str(current_score_2), True, (255, 255, 255))
-        fuel_player2 = font.render('FUEL: ' + str(current_fuel_2), True, (255, 255, 255))
-        health_player2 = font.render('HEALTH: '+ str(current_health_2), True, (255, 255, 255))
+        score_player2 = font.render('SCORE: ' + (str(self.player2.score)), True, (255, 255, 255))
+        fuel_player2 = font.render('FUEL: ' + str(self.player2.fuel), True, (255, 255, 255))
+        health_player2 = font.render('HEALTH: '+ str(self.player2.health), True, (255, 255, 255))
 
         screen.blit(player1_txt, (15, cng.SCREEN_Y - 5*player1_txt.get_height()))
         screen.blit(score_player1, (15, cng.SCREEN_Y - 2*score_player1.get_height()))

@@ -12,8 +12,6 @@ Dulmini S. Gamage
 - spaceships die upon collision with each other
 - spaceships shoot bullets
 - spaceships take damage from bullets
-
-## Newest stuff completed
 - spaceships loose fuel in motion
 - added fuel stations
 - added alien 
@@ -22,6 +20,9 @@ Dulmini S. Gamage
 - spaceships no longer directly die upon collision with each other (they take some damage instead)
 - added text
 - added poofs when spaceship dies
+
+## Newest stuff completed
+- spaceships have to wait longer to get refueled
 
 ## Remaining tasks
 - need to choose which music to use
@@ -34,6 +35,8 @@ Dulmini S. Gamage
 - add poofs when spaceships crashes (just a few poofs)
 - add poof sound when spaceships poof
 - add a starting screen and end screen
+
+    
 
 
 

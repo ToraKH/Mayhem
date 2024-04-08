@@ -242,7 +242,7 @@ class Player1(SpaceShip):
         """ Initializes Player1's attributes"""
         super().__init__(image)
         # Overwrite position to start at the bottom of the screen
-        self.position = pg.math.Vector2(random.randint(cng.BORDER*1.2,cng.SCREEN_X//2), cng.SCREEN_Y-(cng.BORDER*2.2))
+        self.position = pg.math.Vector2(random.randint(cng.BORDER+10,cng.SCREEN_X//2), cng.SCREEN_Y-(cng.BORDER*2.2))
         
 
     def update(self, b_img, p1_bullets):
@@ -290,7 +290,7 @@ class Player2(SpaceShip):
         """ Initializes Player2's attributes"""
         super().__init__(image)
         # Overwrite position to start at the bottom of the screen
-        self.position = pg.math.Vector2(random.randint(cng.SCREEN_X//2, cng.SCREEN_X-cng.BORDER*1.2), cng.SCREEN_Y-(cng.BORDER*2.2))
+        self.position = pg.math.Vector2(random.randint(cng.SCREEN_X//2, cng.SCREEN_X-cng.BORDER+10), cng.SCREEN_Y-(cng.BORDER*2.2))
 
     def update(self, b_img, p2_bullets):
         """Update the state of player 2"""

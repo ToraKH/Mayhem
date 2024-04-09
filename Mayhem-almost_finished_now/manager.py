@@ -123,8 +123,6 @@ class SpaceShip(Object):
 
         #Initialise angle so that the spaceship faces upwards
         self.angle = 90
-        #Initialise empty variable to store future rotated rectangle
-        self.rotated_rect = None
 
         #Initialise empty bullet counter & timer
         self.bullet_count = 0

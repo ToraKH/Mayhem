@@ -101,12 +101,12 @@ class SpaceShip(Object):
             #Update position and rectange based on velocity
             self.position += self.velocity
             self.rect.center = self.position
-            #Draw bullet directly to the screen
-            screen.blit(self.image, self.rect)
-            
+
             #Check if bullet has gone out-of-bounds
             self.edge_kill()
-
+            
+            #Draw bullet directly to the screen
+            screen.blit(self.image, self.rect)
 
     #-----------------------------------------------------    
     #Proceed with methods related to the Spaceship Class

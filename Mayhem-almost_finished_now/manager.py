@@ -404,7 +404,34 @@ class Manager():
             image = pg.image.load(filename).convert_alpha()
             #Add scaled images into the list
             self.poof_images.append(image)
-    
+
+
+# ============================================================= 
+                    
+    def sprites_init(self):
+        """Initializes objects, and groups them"""
+        #Create Players and fill in Player-groups
+        self.player1 = Player1(self.player1_img)
+        self.player1_group = pg.sprite.Group()
+        self.player1_group.add(self.player1)
+
+        self.player2 = Player2(self.player2_img)
+        self.player2_group = pg.sprite.Group()
+        self.player2_group.add(self.player2)
+
+        #Create group for players bullets
+        self.p1_bullet_group = pg.sprite.Group()
+        self.p2_bullet_group = pg.sprite.Group()
+
+        #Create group for obstacles and fill in group
+        self.obstacle_group = pg.sprite.Group()
+        for _ in range(cng.OBSTACLES):
+            self.obstacle_group.add(Obstacle(self.obstacle_img))
+
+        #Create fuel-group and fill in group
+        self.fuel_group = pg.sprite.Group()
+        self.fuel_group.add(FuelSpot(self.fuel_img, cng.SCREEN_X/4, cng.SCREEN_Y-cng.BORDER*1.42))
+        self.fuel_group.add(FuelSpot(self.fuel_img, cng.SCREEN_X*3/4, cng.SCREEN_Y-cng.BORDER*1.42))
         
 
 # ============================================================= 
@@ -548,33 +575,6 @@ class Manager():
                     self.sprites_init()
                     self.poofs_init()
                     self.game = "on"
-
-# ============================================================= 
-                    
-    def sprites_init(self):
-        """Initializes objects, and groups them"""
-        #Create Players and fill in Player-groups
-        self.player1 = Player1(self.player1_img)
-        self.player1_group = pg.sprite.Group()
-        self.player1_group.add(self.player1)
-
-        self.player2 = Player2(self.player2_img)
-        self.player2_group = pg.sprite.Group()
-        self.player2_group.add(self.player2)
-
-        #Create group for players bullets
-        self.p1_bullet_group = pg.sprite.Group()
-        self.p2_bullet_group = pg.sprite.Group()
-
-        #Create group for obstacles and fill in group
-        self.obstacle_group = pg.sprite.Group()
-        for _ in range(cng.OBSTACLES):
-            self.obstacle_group.add(Obstacle(self.obstacle_img))
-
-        #Create fuel-group and fill in group
-        self.fuel_group = pg.sprite.Group()
-        self.fuel_group.add(FuelSpot(self.fuel_img, cng.SCREEN_X/4, cng.SCREEN_Y-cng.BORDER*1.42))
-        self.fuel_group.add(FuelSpot(self.fuel_img, cng.SCREEN_X*3/4, cng.SCREEN_Y-cng.BORDER*1.42))
 
 # ============================================================= 
         

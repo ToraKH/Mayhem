@@ -31,11 +31,7 @@ class Object(pg.sprite.Sprite):
         self.position = pg.math.Vector2(0,0)
         #Create rectangle around sprite based on its position
         self.rect = pg.rect.Rect(self.position.x, self.position.y, self.width, self.height)
-    
 
-    def update(self):
-        """Placeholder for update-method to be overwritten by subclasses"""
-        pass
 
 # ============================================================= 
 # ============================================================= 

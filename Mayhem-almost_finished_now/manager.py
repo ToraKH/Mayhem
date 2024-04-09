@@ -268,7 +268,7 @@ class Player1(SpaceShip):
 
         #Check whether spaceship is dead
         if self.health <= 0:
-            #Ensures that HP is displayed as as a negative
+            #Ensures that HP is not displayed as as a negative
             self.health = 0
             self.kill()
 
@@ -315,7 +315,7 @@ class Player2(SpaceShip):
 
         #Check whether spaceship is dead
         if self.health <= 0:
-            #Ensures that HP is displayed as as a negative
+            #Ensures that HP is not displayed as as a negative
             self.health = 0
             self.kill()
 

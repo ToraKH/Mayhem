@@ -257,12 +257,6 @@ class Player1(SpaceShip):
         else:
             #Will only apply gravity if spaceship is not in motion
             self.gravity()  
-        
-        #Check whether spaceship is dead
-        if self.health <= 0:
-            #Ensures that HP is displayed as as a negative
-            self.health = 0
-            self.kill()
 
         #Update position based on current velocity
         self.position += self.velocity
@@ -271,6 +265,12 @@ class Player1(SpaceShip):
 
         #Check if spaceship has gone out-of-bounds
         self.edge_kill()
+
+        #Check whether spaceship is dead
+        if self.health <= 0:
+            #Ensures that HP is displayed as as a negative
+            self.health = 0
+            self.kill()
 
 # ============================================================= 
 # ============================================================= 
@@ -305,12 +305,6 @@ class Player2(SpaceShip):
             #Only apply gravity if spaceship is not in motion
             self.gravity()
 
-        #Check whether spaceship is dead
-        if self.health <= 0:
-            #Ensures that HP is displayed as as a negative
-            self.health = 0
-            self.kill()
-
         #Update position based on current velocity
         self.position += self.velocity
         #Update rectangle
@@ -318,6 +312,12 @@ class Player2(SpaceShip):
 
         #Check if spaceship has gone out-of-bounds
         self.edge_kill()
+
+        #Check whether spaceship is dead
+        if self.health <= 0:
+            #Ensures that HP is displayed as as a negative
+            self.health = 0
+            self.kill()
 
 
 # ============================================================= 

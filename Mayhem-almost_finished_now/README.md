@@ -1,5 +1,9 @@
-# Mayhem
-INF-1400 assignment 3
+# Cosmic Cavern
+
+## Mayhem
+The manager file consists of a game of Mayhem, a space-themed game where two players navigate a space cave while trying to shoot each other down. The ships need to refuel, and avoid hazards such as aliens and cave walls. Players earn points by shooting opponents and loose some if they perish. The scores and wins of each round are tallied up. May the best space pilot win!
+All the images, sounds and other environmental variables are contained in the config file.
+This is our solution to the third obligatory assignment in INF-1400: Objektorientert Programmering.
 
 ### Authors
 Tora K. Homme
@@ -7,7 +11,6 @@ Tora K. Homme
 Dulmini S. Gamage
 
 ## Installing pygame
-
 Ensure that python is installed
 
 ```bash
@@ -20,7 +23,6 @@ Ensure that PIP is installed
   pip --version
 ```
 
-
 Install pygame 
 
 ```bash
@@ -28,11 +30,10 @@ Install pygame
 ```
 
 ## Run the game
-
 Go to src directory
 
 ```bash
-  cd inf1400-tohom2986-3/src #OBSOBS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! YOU NEED TO CHANGE THIS TO SUIT YOU
+  cd inf1400-tohom2986-3/src 
 ```
 
 Run simulation
@@ -41,9 +42,7 @@ Run simulation
   python3 manager.py
 ```
 
-
 ## Key Commands
-
 - Start Screen
     - ```to start game, press "SPACE"```
 
@@ -62,7 +61,6 @@ Run simulation
 
 - End Screen
     - ```to restart game, press "SPACE"```
-
 
 ## Features
 - Music 🎵

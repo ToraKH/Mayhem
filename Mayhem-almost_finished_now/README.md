@@ -34,7 +34,7 @@ Install pygame
 Go to src directory
 
 ```bash
-  cd inf1400-tohom2986-3/src 
+  cd inf1400-dugam1065-3/src
 ```
 
 Run simulation

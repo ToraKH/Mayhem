@@ -132,19 +132,19 @@ class SpaceShip(Object):
 #-------------POSITION-CONTROL------------------------
 
     def rotate_right(self):
-        ''' Rotates the ship to the right'''
+        """ Rotates the ship to the right"""
         #Decrease sprite's angle to turn right
         self.angle -= cng.ROTATION_SPEED
         
 
     def rotate_left(self):
-        ''' Rotates the ship to the left'''
+        """ Rotates the ship to the left"""
         #Increase sprite's angle to turn left
         self.angle += cng.ROTATION_SPEED
         
 
     def thrust(self):
-        ''' The ship moves forward'''
+        """ The ship moves forward"""
         # Calculate the constant velocity vector based on its angle
         angl_rad = math.radians(self.angle)
         direction = pg.math.Vector2(math.cos(angl_rad), -math.sin(angl_rad))
@@ -156,7 +156,7 @@ class SpaceShip(Object):
 
     
     def gravity(self):
-        ''' Gravitational force to drag the ship downwards'''
+        """ Gravitational force to drag the ship downwards"""
         #Applies a downwards gavitational force if spaceship is above ground
         if self.rect.bottom < cng.SCREEN_Y - (cng.BORDER//2-5):
             self.velocity.y += cng.GRAVITY
@@ -187,7 +187,7 @@ class SpaceShip(Object):
 
 
     def shoot(self, b_img, bullets):
-        ''' The ship shoots bullets'''
+        """ The ship shoots bullets"""
         #Get the 'time'
         current_time = pg.time.get_ticks()
         # Reset bullet count if cooldown has passed
@@ -278,7 +278,7 @@ class Player1(SpaceShip):
 
 #BLUE SPACESHIP
 class Player2(SpaceShip):
-    """<Represents Player 2's spaceship"""
+    """Represents Player 2's spaceship"""
 
     def __init__(self, image):
         """ Initializes Player2's attributes"""
@@ -359,7 +359,7 @@ class Manager():
         self.loop()
 
     def load_images(self):
-
+        """Loads the images"""
         #Load and scale simulation background
         self.background = pg.image.load(cng.BACKGROUND_IMAGE) 
         self.background = pg.transform.scale(self.background,(cng.SCREEN_X, cng.SCREEN_Y)) 

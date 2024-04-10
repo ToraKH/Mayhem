@@ -514,7 +514,7 @@ class Manager():
                 
                 #-----------------------------------------------------
                         
-                # If player 2 is dead -<> start poof animation
+                # If player 2 is dead -> start poof animation
                 if len(self.player2_group) == 0 and self.finished_poofing2 == False:
                     self.play_crash()
                     #Update timer
@@ -552,6 +552,9 @@ class Manager():
 
                 #Updates sprites
                 self.update_sprites()
+                #Print on-screen game-stats
+                self.text()
+                pg.display.flip()
                 #Maintains 60 frames per second
                 self.clock.tick(60)
 
@@ -657,11 +660,7 @@ class Manager():
         if pg.sprite.groupcollide(self.player2_group, self.fuel_group, False, False):
             if self.player2.fuel < cng.FUELLIMIT:
                 self.player2.fuel += cng.FUELUSE
-
-        #Print on-screen game-stats
-        self.text()
-        pg.display.flip()
-
+                
 # ============================================================= 
 
     def end_screen(self):

@@ -117,7 +117,6 @@ class SpaceShip(Object):
         self.fuel = cng.FUELLIMIT
         self.score = 0
         self.health = cng.HEALTH
-        self.wins = 0  
         #Initialise zero velocity vector 
         self.velocity = pg.math.Vector2(0,0)
 
@@ -339,6 +338,10 @@ class Manager():
         self.p1_total_score = 0
         self.p2_total_score = 0
 
+        #Initialise player total wins
+        self.p1_total_wins = 0
+        self.p2_total_wins = 0
+
         #Boolean to control which player gets scores
         self.player1_won = False
         self.player2_won = False
@@ -346,6 +349,8 @@ class Manager():
         #Ensured that only one victory is counted for
         self.player1_wins_incremented = False
         self.player2_wins_incremented = False
+
+
 
         #Collect images for game
         self.load_images()
@@ -506,7 +511,7 @@ class Manager():
                     
                     # If player 1 is dead, but 2 is alive -> player 2 wins this round
                     if len(self.player2_group) != 0 and self.player2_wins_incremented == False:
-                        self.player2.wins += 1
+                        self.p2_total_wins += 1
                         self.player2_won = True
                         self.player2_wins_incremented = True
                         #Loosing player gets a penalty if they die
@@ -530,7 +535,7 @@ class Manager():
                     
                     # If player 2 is dead, but 1 is alive -> player 1 wins this round
                     if len(self.player1_group) != 0 and self.player1_wins_incremented == False:
-                        self.player1.wins += 1
+                        self.p1_total_wins += 1 
                         self.player1_won = True
                         self.player1_wins_incremented = True
                         #Loosing player gets a penalty if they die
@@ -684,8 +689,8 @@ class Manager():
         playerONEwon = font1.render('PLAYER 1 REIGNS SUPREME!', True, (255, 255, 255))
         playerTWOwon = font1.render('PLAYER 2 DOMINATES THE SKIES!', True, (255, 255, 255))
 
-        winner_score1 = font1.render('WINS: ' + str(self.player1.wins), True, (100, 100, 100))
-        winner_score2 = font1.render('WINS: ' + str(self.player2.wins), True, (100, 100, 100))
+        winner_score1 = font1.render('WINS: ' + str(self.p1_total_wins), True, (100, 100, 100))
+        winner_score2 = font1.render('WINS: ' + str(self.p2_total_wins), True, (100, 100, 100))
 
 
         #Print text at correct place of the screen
@@ -728,8 +733,8 @@ class Manager():
         fuel_player2 = font.render('FUEL: ' + str(self.player2.fuel), True, (255, 255, 255))
         health_player2 = font.render('HEALTH: '+ str(self.player2.health), True, (255, 255, 255))
 
-        winner_score1 = font.render('WINS: ' + str(self.player1.wins), True, (255, 255, 255))
-        winner_score2 = font.render('WINS: ' + str(self.player2.wins), True, (255, 255, 255))
+        winner_score1 = font.render('WINS: ' + str(self.p1_total_wins), True, (255, 255, 255))
+        winner_score2 = font.render('WINS: ' + str(self.p2_total_wins), True, (255, 255, 255))
 
         #Draw text to screen at correct place
         screen.blit(player1_txt, (15, cng.SCREEN_Y - 5*player1_txt.get_height()))

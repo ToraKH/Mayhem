@@ -340,9 +340,9 @@ class Player2(SpaceShip):
             self.health = 0
             self.kill()
 
+# ============================================================= 
+# ============================================================= 
 
-# ============================================================= 
-# ============================================================= 
 class Button:
     def __init__(self, img, pos_x, pos_y):
         self.img = img
@@ -355,18 +355,7 @@ class Button:
     def show(self,):
         """ Show buttons on screen"""
         screen.blit(self.img, (self.pos_x, self.pos_y))
-    
-    def check_for_event(self):
-        """Checks whether player has interacted"""      
-        for event in pg.event.get():
-            if event.type == pg.MOUSEBUTTONDOWN:
-                mouse_pos = pg.mouse.get_pos()
-                if self.pos_x <= mouse_pos[0] <= self.pos_x+self.width and self.pos_y <= mouse_pos[1] <= self.pos_y+self.height:
-                    print("PRESSED ON BUTTON")
-                    return True
-                else:
-                    return False
-      
+
 # ============================================================= 
 # ============================================================= 
 
@@ -483,14 +472,55 @@ class Manager():
         self.goto_start_but_img = pg.image.load(cng.GOTO_START).convert_alpha()
         self.goto_start_but_img = pg.transform.scale(self.goto_start_but_img,(self.goto_start_but_img.get_width()*cng.BUTTON_SIZE, self.goto_start_but_img.get_height()*cng.BUTTON_SIZE))
         
-        
-        # Load and scale sprite images
-        self.ship1_img1 = pg.image.load(cng.SHIP_PLAYER1_IMAGE).convert_alpha() 
+
+        self.ship1_img1 = pg.image.load(cng.SHIP_GRØNN).convert_alpha() 
         self.ship1_img1 = pg.transform.scale(self.ship1_img1,(self.ship1_img1.get_width(), self.ship1_img1.get_height()))
         self.ships_list1.append(self.ship1_img1)
-        self.ship2_img2 = pg.image.load(cng.SHIP_PLAYER2_IMAGE).convert_alpha() 
+        self.ship1_img2 = pg.image.load(cng.SHIP_SVART).convert_alpha() 
+        self.ship1_img2 = pg.transform.scale(self.ship1_img2,(self.ship1_img2.get_width(), self.ship1_img2.get_height()))
+        self.ships_list1.append(self.ship1_img2)
+        self.ship1_img3 = pg.image.load(cng.SHIP_LYS_BLÅ).convert_alpha() 
+        self.ship1_img3 = pg.transform.scale(self.ship1_img3,(self.ship1_img3.get_width(), self.ship1_img3.get_height()))
+        self.ships_list1.append(self.ship1_img3)        
+        self.ship1_img4 = pg.image.load(cng.SHIP_MØRK_BLÅ).convert_alpha() 
+        self.ship1_img4 = pg.transform.scale(self.ship1_img4,(self.ship1_img4.get_width(), self.ship1_img4.get_height()))
+        self.ships_list1.append(self.ship1_img4)
+        self.ship1_img5 = pg.image.load(cng.SHIP_MØRK_GRØNN).convert_alpha() 
+        self.ship1_img5 = pg.transform.scale(self.ship1_img5,(self.ship1_img5.get_width(), self.ship1_img5.get_height()))
+        self.ships_list1.append(self.ship1_img5)
+        self.ship1_img6 = pg.image.load(cng.SHIP_MULTI_CAVE).convert_alpha() 
+        self.ship1_img6 = pg.transform.scale(self.ship1_img6,(self.ship1_img6.get_width(), self.ship1_img6.get_height()))
+        self.ships_list1.append(self.ship1_img6)
+        self.ship1_img7 = pg.image.load(cng.SHIP_MULTI_SPACE).convert_alpha() 
+        self.ship1_img7 = pg.transform.scale(self.ship1_img7,(self.ship1_img7.get_width(), self.ship1_img7.get_height()))
+        self.ships_list1.append(self.ship1_img7)
+
+
+        self.ship2_img1 = pg.image.load(cng.SHIP_GUL).convert_alpha() 
+        self.ship2_img1 = pg.transform.scale(self.ship2_img1,(self.ship2_img1.get_width(), self.ship2_img1.get_height()))
+        self.ships_list2.append(self.ship2_img1)
+        self.ship2_img2 = pg.image.load(cng.SHIP_ORANSJ).convert_alpha() 
         self.ship2_img2 = pg.transform.scale(self.ship2_img2,(self.ship2_img2.get_width(), self.ship2_img2.get_height()))
-        self.ships_list2.append(self.ship2_img2)
+        self.ships_list2.append(self.ship2_img2)             
+        self.ship2_img3 = pg.image.load(cng.SHIP_MULTI_LAVA).convert_alpha() 
+        self.ship2_img3 = pg.transform.scale(self.ship2_img3,(self.ship2_img3.get_width(), self.ship2_img3.get_height()))
+        self.ships_list2.append(self.ship2_img3)        
+        self.ship2_img4 = pg.image.load(cng.SHIP_RØD).convert_alpha() 
+        self.ship2_img4 = pg.transform.scale(self.ship2_img4,(self.ship2_img4.get_width(), self.ship2_img4.get_height()))
+        self.ships_list2.append(self.ship2_img4)       
+        self.ship2_img5 = pg.image.load(cng.SHIP_ROSA).convert_alpha() 
+        self.ship2_img5 = pg.transform.scale(self.ship2_img5,(self.ship2_img5.get_width(), self.ship2_img5.get_height()))
+        self.ships_list2.append(self.ship2_img5)        
+        self.ship2_img6 = pg.image.load(cng.SHIP_LILLA).convert_alpha() 
+        self.ship2_img6 = pg.transform.scale(self.ship2_img6,(self.ship2_img6.get_width(), self.ship2_img6.get_height()))
+        self.ships_list2.append(self.ship2_img6)
+        self.ship2_img7 = pg.image.load(cng.SHIP_MULTI_GUL).convert_alpha() 
+        self.ship2_img7 = pg.transform.scale(self.ship2_img7,(self.ship2_img7.get_width(), self.ship2_img7.get_height()))
+        self.ships_list2.append(self.ship2_img7)
+       
+        
+        
+        
         self.obstacle_img = pg.image.load(cng.OBSTACLE_IMAGE).convert_alpha() 
         self.obstacle_img = pg.transform.scale(self.obstacle_img,(self.obstacle_img.get_width(), self.obstacle_img.get_height()))
         self.bullet_img = pg.image.load(cng.BULLET_IMAGE).convert_alpha() 
@@ -765,17 +795,15 @@ class Manager():
         restart_button = Button(self.restart_but_img, (cng.SCREEN_X-self.restart_but_img.get_width())/2, cng.SCREEN_Y/3 - 2*self.restart_but_img.get_height())
         goto_start_button = Button(self.goto_start_but_img, (cng.SCREEN_X-self.goto_start_but_img.get_width())/2, cng.SCREEN_Y/2 + 3*self.goto_start_but_img.get_height())   
         restart_button.show()
-        event = restart_button.check_for_event()
+        goto_start_button.show()
 
         # Start game if pressed on start button
-        if event == True or key[pg.K_SPACE]:
+        if key[pg.K_SPACE]:
             pg.time.delay(150)
             self.game = "on"    #start game
 
-        goto_start_button.show()
-        goto_start = goto_start_button.check_for_event()
         
-        if goto_start == True or key[pg.K_g]:
+        if key[pg.K_g]:
             pg.time.delay(150)
             self.game = "starting"    #goto start
             #Reset sprite and game status for a new, fresh game
@@ -863,20 +891,18 @@ class Manager():
         screen.blit(self.start_bg, (0,0)) 
         
         key = pg.key.get_pressed()
-
         start_button = Button(self.start_but_img, (cng.SCREEN_X-self.start_but_img.get_width())/2, cng.SCREEN_Y/3 + self.start_but_img.get_height())
         customize_button = Button(self.custom_but_img, (cng.SCREEN_X-self.custom_but_img.get_width())/2, cng.SCREEN_Y/2 + 2*self.custom_but_img.get_height())   
         start_button.show()
-        event = start_button.check_for_event()
+        customize_button.show()
 
         # Start game if pressed on start button
-        if event == True or key[pg.K_SPACE]:
+        if key[pg.K_SPACE]:
             pg.time.delay(150)
             self.game = "on"    #start game
 
-        customize_button.show()
-        custom_pressed = customize_button.check_for_event()
-        if custom_pressed == True or key[pg.K_c]:
+
+        if key[pg.K_c]:
             
             self.game = "choose_customisation"
             
@@ -889,14 +915,13 @@ class Manager():
         key = pg.key.get_pressed()
         right_arrow_button = Button(self.r_arr_but_img, (cng.SCREEN_X+2*self.r_arr_but_img.get_width())/2, cng.SCREEN_Y/2 + 5*self.r_arr_but_img.get_height())
         left_arrow_button = Button(self.l_arr_but_img, (cng.SCREEN_X-4*self.l_arr_but_img.get_width())/2, cng.SCREEN_Y/2 + 5*self.l_arr_but_img.get_height())
+        button = Button(self.confirm_but_img, (cng.SCREEN_X-self.confirm_but_img.get_width())/2, cng.SCREEN_Y/2 + 6*self.confirm_but_img.get_height())
         right_arrow_button.show()
-        r_arr_pressed = right_arrow_button.check_for_event()
         left_arrow_button.show()
-        l_arr_pressed = left_arrow_button.check_for_event()
+        button.show()
+        
         run = True
         index = 0
-        prev_r_arr_pressed = False  # Holder styr på om høyrepiltasten var nede i forrige iterasjon
-        prev_l_arr_pressed = False  # Holder styr på om venstrepiltasten var nede i forrige iterasjon
 
         # Legg til en kort forsinkelse i millisekunder mellom hvert bildebytte
         delay = 200  # 200 ms = 0.2 sekunder
@@ -904,23 +929,18 @@ class Manager():
         while run:
             key = pg.key.get_pressed()
             screen.blit(list[index], (cng.SCREEN_X/2, cng.SCREEN_Y/2 + 20))
-            button = Button(self.confirm_but_img, (cng.SCREEN_X-self.confirm_but_img.get_width())/2, cng.SCREEN_Y/2 + 6*self.confirm_but_img.get_height())
-            button.show()
-            button_press = button.check_for_event()
             
             # Sjekk om høyrepiltasten nettopp ble trykket ned og ikke var nede i forrige iterasjon
-            if (r_arr_pressed and not prev_r_arr_pressed) or key[pg.K_a] or key[pg.K_RIGHT]:
+            if key[pg.K_a] or key[pg.K_RIGHT]:
                 index = (index+1) % len(list)
                 pg.time.delay(delay)  # Legg til en forsinkelse før neste bildebytte
-            prev_r_arr_pressed = r_arr_pressed  # Oppdater forrige tilstand av høyrepiltasten
             
             # Sjekk om venstrepiltasten nettopp ble trykket ned og ikke var nede i forrige iterasjon
-            if (l_arr_pressed and not prev_l_arr_pressed) or key[pg.K_s] or key[pg.K_LEFT]:
+            if key[pg.K_s] or key[pg.K_LEFT]:
                 index = (index-1) % len(list)
                 pg.time.delay(delay)  # Legg til en forsinkelse før neste bildebytte
-            prev_l_arr_pressed = l_arr_pressed  # Oppdater forrige tilstand av venstrepiltasten
             
-            if button_press == True or key[pg.K_SPACE]:
+            if key[pg.K_SPACE]:
                 run = False
             pg.display.update()
         
@@ -965,31 +985,25 @@ class Manager():
         """Shows screen where one chooses if customize ship or arena"""
         screen.blit(self.custom_bg, (0,0)) 
         key = pg.key.get_pressed()
-
         choose_ship_button = Button(self.choose_ship_but_img, (cng.SCREEN_X-self.choose_ship_but_img.get_width())/2, cng.SCREEN_Y/3 + 5*self.choose_ship_but_img.get_height())
         choose_arena_button = Button(self.choose_arena_but_img, (cng.SCREEN_X-self.choose_arena_but_img.get_width())/2, cng.SCREEN_Y/3 + 3*self.choose_arena_but_img.get_height())   
-        choose_ship_button.show()
-        chose_ship = choose_ship_button.check_for_event()
-        choose_arena_button.show()
-        chose_arena = choose_arena_button.check_for_event()
         start_but = Button(self.start_but_img, (cng.SCREEN_X-self.start_but_img.get_width())/2, cng.SCREEN_Y/3 + self.start_but_img.get_height())
         start_but.show()
-        event_start_but = start_but.check_for_event()
-
-
+        choose_ship_button.show()
+        choose_arena_button.show()
         # Start game if pressed on start button
-        if event_start_but == True or key[pg.K_SPACE]:
+        if key[pg.K_SPACE]:
             pg.time.delay(150)
             self.game = "on"    #start game
 
         # Choose ships if pressed on choose ship button or S
-        if chose_ship == True or key[pg.K_s]:
+        if key[pg.K_s]:
             pg.time.delay(150)
             self.game = "choose_ship"
 
 
         # Choose area if pressed on choose area button or A
-        if chose_arena== True or key[pg.K_a]:
+        if key[pg.K_a]:
             pg.time.delay(150)
             self.game = "choose_arena"
         pg.display.update()   
